@@ -19,9 +19,6 @@ The platform is built to support future features like mobile app integration and
 - JavaScript & AJAX
 - AWS Deployment (Planned)
 
-## 📌 Project Management
-- **Trello:** [LiteAnime Trello](https://trello.com/invite/b/67dc9a17a711964f8d215c55/ATTI7737823ca846675dff2a58685c4c22670631D36D/liteanime-platform)
-- **GitHub Repository:** [LiteAnime GitHub](https://github.com/xAnoOos/LiteAnime)
 
 ## 📜 License
 This project is licensed under the MIT License.
