@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background: url("{% static 'hero-image.png' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .thread-container {
+        background-color: rgba(0, 0, 0, 0.85);
+        padding: 30px;
+        border-radius: 15px;
+        color: white;
+        max-width: 900px;
+        margin: auto;
+        margin-top: 40px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .thread-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .thread-title img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-right: 15px;
+    }
+
+    .thread-meta {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+
+    .comment-box {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .comment {
+        margin-bottom: 15px;
+    }
+
+    .back-link {
+        margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="thread-container">
+    <div class="thread-title">
+        {% if thread.image %}
+        <img src="{{ thread.image.url }}" alt="Thread Image">
+        {% endif %}
+        {{ thread.title }}
+    </div>
+
+    <div class="thread-meta">
+        📅 {{ thread.created_at|date:"M d, Y" }} | 👁️ {{ thread.views }} views
+    </div>
+
+    <div class="thread-content mb-4">
+        {{ thread.content }}
+    </div>
+
+    <hr>
+
+    <h4>💬 Comments</h4>
+    <div class="comment-box">
+        {% for comment in comments %}
+        <div class="comment">
+            <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
+        </div>
+        {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+        {% endfor %}
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'ajax_add_comment' thread.pk %}" id="comment-form">
+            {% csrf_token %}
+            <textarea name="content" id="comment-content" class="form-control mt-2 mb-2"
+                placeholder="Write a comment..."></textarea>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+        {% else %}
+        <p><a href="{% url 'login' %}" class="text-info">Log in</a> to post a comment.</p>
+        {% endif %}
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'threads' %}" class="btn btn-outline-light">← Back to Threads</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('comment-form')?.addEventListener('submit', function (e) {
+        e.preventDefault();
+        let content = document.getElementById("comment-content").value;
+        fetch("{% url 'ajax_add_comment' thread.pk %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ content })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                }
+            });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,295 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LiteAnime | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: #121212;
+            color: #eee;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            background-color: #1c1c1c;
+        }
+
+        .navbar-brand img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .hero {
+            padding: 100px 20px;
+            background: linear-gradient(to bottom, #1e1e1e, #2c2c2c);
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .hero img {
+            max-width: 180px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: #00bcd4;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            border-left: 5px solid #00bcd4;
+            padding-left: 10px;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .list-group-item {
+            background: #1c1c1c;
+            color: #eee;
+            border: none;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #00bcd4;
+            color: black;
+        }
+
+        .thread-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .highlight-box {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+        }
+
+        .highlight-box .meta {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .why-liteanime-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .why-card {
+            background-color: #1e1e1e;
+            border-left: 4px solid #00bcd4;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 300px;
+            flex: 1;
+            transition: 0.3s ease;
+        }
+
+        .why-card:hover {
+            background-color: #2a2a2a;
+        }
+
+        footer {
+            background-color: #1c1c1c;
+            color: #ccc;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ccc;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #00bcd4;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'logo.png' %}" alt="LiteAnime Logo" height="30" class="me-2">
+                <strong>LiteAnime</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'threads' %}">Threads</a></li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            data-bs-toggle="dropdown">
+                            {% if user.profile.avatar and user.profile.avatar.name %}
+                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle me-2" width="30" height="30"
+                                style="object-fit: cover;">
+                            {% endif %}
+                            {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="{% url 'profile' username=user.username %}">Profile</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero mt-5 pt-5">
+        <div class="container">
+            <img src="{% static 'threads.png' %}" alt="Hero Image">
+            <h2 class="display-4 fw-bold">Welcome to LiteAnime Threads</h2>
+            <p class="lead">Join the conversation, discover new ideas, and share your anime world with others!</p>
+            <a href="{% url 'threads' %}" class="btn btn-outline-info btn-lg">Explore Threads</a>
+        </div>
+    </section>
+
+    <!-- Trending + Latest Threads -->
+    <section class="container my-5">
+        <div class="row">
+            <!-- Trending Now -->
+            <div class="col-md-6">
+                <h3 class="section-title">🔥 Trending Now</h3>
+                <ul class="list-group list-group-flush">
+                    {% for thread in trending_threads %}
+                    <li class="list-group-item d-flex align-items-center">
+                        {% if thread.image %}
+                        <img src="{{ thread.image.url }}" class="thread-image">
+                        {% else %}
+                        <img src="{% static 'default-thread.jpg' %}" class="thread-image">
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'thread_detail' thread.id %}" class="text-white">{{ thread.title }}</a><br>
+                            <small class="text-muted">👁️ {{ thread.views }} views</small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Latest Threads -->
+            <div class="col-md-6">
+                <h3 class="section-title">🆕 Latest Threads</h3>
+                <ul class="list-group list-group-flush">
+                    {% for thread in latest_threads %}
+                    <li class="list-group-item d-flex align-items-center">
+                        {% if thread.image %}
+                        <img src="{{ thread.image.url }}" class="thread-image">
+                        {% else %}
+                        <img src="{% static 'default-thread.jpg' %}" class="thread-image">
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'thread_detail' thread.id %}" class="text-white">{{ thread.title }}</a><br>
+                            <small class="text-muted">{{ thread.created_at|date:"M d, Y" }}</small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlighted Comments -->
+    <section class="container my-5">
+        <h3 class="section-title">💬 Highlighted Comments</h3>
+        {% for comment in top_comments %}
+        <div class="highlight-box d-flex align-items-start gap-3">
+            {% if comment.user.profile.avatar %}
+            <img src="{{ comment.user.profile.avatar.url }}" class="rounded-circle" width="40" height="40"
+                style="object-fit: cover;">
+            {% else %}
+            <img src="{% static 'default-avatar.jpg' %}" class="rounded-circle" width="40" height="40"
+                style="object-fit: cover;">
+            {% endif %}
+            <div>
+                <p class="mb-1"><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+                <div class="meta">
+                    ❤️ {{ comment.likes.count }} Likes |
+                    👁️ {{ comment.thread.views }} Views
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- Why LiteAnime (new design) -->
+    <section class="container my-5">
+        <h3 class="section-title">✨ Why LiteAnime?</h3>
+        <div class="why-liteanime-showcase">
+            <div class="why-card">
+                <h5>🌐 Community Power</h5>
+                <p>Connect with anime lovers worldwide through threads, reactions, and discussions.</p>
+            </div>
+            <div class="why-card">
+                <h5>📱 Fully Responsive</h5>
+                <p>Access LiteAnime easily from your phone, tablet, or desktop without missing a beat.</p>
+            </div>
+            <div class="why-card">
+                <h5>🎨 Smooth Design</h5>
+                <p>Enjoy a sleek, modern interface built for comfort and clarity.</p>
+            </div>
+            <div class="why-card">
+                <h5>🚀 Fast & Free</h5>
+                <p>Instant access to the latest anime threads, completely free and open to all.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Built with ❤️ by Anas Obaid</p>
+        <div>
+            <a href="https://discord.com" target="_blank"><i class="bi bi-discord fs-4"></i></a>
+            <a href="https://www.instagram.com" target="_blank"><i class="bi bi-instagram fs-4"></i></a>
+        </div>
+        <div class="mt-2">
+            <a href="{% url 'about' %}">About Us</a> |
+            <a href="{% url 'about' %}#contact">Contact</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
