@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    input {
+        color: #000 !important;
+        background-color: #f8f9fa;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    input::placeholder {
+        color: #888 !important;
+    }
+
+    label {
+        color: #000;
+        font-weight: 500;
+    }
+
+    .errorlist {
+        color: red;
+        list-style: none;
+        padding-left: 0;
+        font-size: 13px;
+        margin-top: -10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="register-box bg-light p-4 rounded" style="width: 350px;">
+        <h2 class="text-center text-dark mb-4">Create Account</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">Register</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p class="mb-1" style="color: #333;">Already have an account?
+                <a href="{% url 'login' %}" style="color: #2575fc; font-weight: 500;">Login here</a>
+            </p>
+            <a href="{% url 'home' %}" class="btn btn-outline-dark btn-sm mt-2">← Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

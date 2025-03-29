@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    input.form-control {
+        color: #000 !important;
+        background-color: #f8f9fa;
+    }
+
+    input::placeholder {
+        color: #888 !important;
+    }
+
+    label {
+        color: #000;
+        font-weight: 500;
+    }
+
+    .alert {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="login-box bg-light p-4 rounded" style="width: 350px;">
+        <h2 class="text-center text-dark mb-4">Login</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger text-center">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control mb-3" placeholder="Enter username" required>
+
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control mb-3" placeholder="Enter password" required>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p class="mb-1" style="color: #333;">Don't have an account?
+                <a href="{% url 'register' %}" style="color: #2575fc; font-weight: 500;">Register here</a>
+            </p>
+            <a href="{% url 'home' %}" class="btn btn-outline-dark btn-sm mt-2">← Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

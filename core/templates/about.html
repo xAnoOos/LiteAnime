@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .about-section {
+        padding: 60px 20px;
+        background: linear-gradient(145deg, #1e1e2f, #12121b);
+        color: #fff;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .about-section h1 {
+        font-size: 3rem;
+        color: #00e6ff;
+        margin-bottom: 20px;
+    }
+
+    .about-section p {
+        font-size: 1.2rem;
+        max-width: 900px;
+        margin: 0 auto 30px;
+        line-height: 1.7;
+        color: #d1d1d1;
+    }
+
+    .about-card {
+        background: #1c1c2e;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.1);
+        margin: 20px auto;
+        max-width: 700px;
+        transition: transform 0.3s;
+    }
+
+    .about-card:hover {
+        transform: scale(1.03);
+    }
+
+    .contact-links {
+        margin-top: 30px;
+    }
+
+    .contact-links a {
+        margin: 0 10px;
+        color: #00e6ff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .contact-links a:hover {
+        color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="about-section">
+    <h1>About LiteAnime</h1>
+    <p>LiteAnime is more than just a platform — it's a growing community for anime, manga, and novel enthusiasts. We aim
+        to bring fans together, allowing them to connect, share threads, and explore trending topics in the anime world.
+    </p>
+
+    <div class="about-card">
+        <h3>🌟 Our Mission</h3>
+        <p>We strive to provide a friendly, modern space for anime lovers to interact, exchange opinions, and discover
+            the latest fan content — all in one place.</p>
+    </div>
+
+    <div class="about-card">
+        <h3>👨‍💻 Built By</h3>
+        <p>This project is crafted with passion by <strong>Anas Obaid</strong> — combining full-stack development, clean
+            UI design, and love for anime culture.</p>
+    </div>
+
+    <div class="contact-links">
+        <p>Connect with us:</p>
+        <a href="https://instagram.com" target="_blank">Instagram</a>
+        <a href="https://discord.com" target="_blank">Discord</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .profile-container {
+        display: flex;
+        min-height: 80vh;
+        padding: 40px;
+        background-color: #1e1e1e;
+        color: #fff;
+    }
+
+    .profile-sidebar {
+        width: 300px;
+        background-color: #111;
+        padding: 30px;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: 0 0 10px #00bcd4;
+        margin-right: 30px;
+    }
+
+    .profile-sidebar img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid #00bcd4;
+        box-shadow: 0 0 10px #00bcd4;
+        margin-bottom: 10px;
+    }
+
+    .profile-sidebar h3 {
+        margin: 10px 0 5px;
+    }
+
+    .profile-sidebar p {
+        font-size: 14px;
+        color: #aaa;
+    }
+
+    .profile-content {
+        flex-grow: 1;
+        background-color: #222;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 10px #111;
+    }
+
+    .profile-content h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #00bcd4;
+    }
+
+    .form-control {
+        background-color: #333;
+        color: #fff;
+        border: 1px solid #444;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .form-control:focus {
+        border-color: #00bcd4;
+        box-shadow: none;
+        background-color: #444;
+    }
+
+    .form-label {
+        margin-bottom: 5px;
+        color: #bbb;
+    }
+
+    .save-btn {
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 30px;
+        background-color: #00bcd4;
+        border: none;
+        border-radius: 25px;
+        color: #fff;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+
+    .save-btn:hover {
+        background-color: #0097a7;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-sidebar">
+        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'default-avatar.png' %}{% endif %}"
+            alt="Avatar">
+        <h3>{{ user.username }}</h3>
+        <p>{{ user.email }}</p>
+    </div>
+
+    <div class="profile-content">
+        <h2>Your Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Username</label>
+                    {{ form.username }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Change Avatar</label>
+                    {{ form.avatar }}
+                </div>
+            </div>
+            <button type="submit" class="save-btn">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
