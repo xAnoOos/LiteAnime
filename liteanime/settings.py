@@ -18,6 +18,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+ALLOWED_HOSTS = ['16.171.40.48', 'localhost', '127.0.0.1', 'liteanime.com']
 
 
 # Application definition
