@@ -27,14 +27,16 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
+            new_user = form.save(commit=False)
+            new_user.set_password(form.cleaned_data['password'])
+            new_user.save()
             auth_login(request, new_user)
+            messages.success(request, "Registration successful!")
             return redirect('home')
-        else:
-            messages.error(request, "Registration failed. Please check your input.")
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
+
 
 # Login view with support for `next` redirect
 def login_view(request):
