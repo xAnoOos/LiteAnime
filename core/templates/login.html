@@ -41,8 +41,12 @@
             <label class="form-label">Password</label>
             <input type="password" name="password" class="form-control mb-3" placeholder="Enter password" required>
 
+            <!-- Hidden input for next URL if you want to keep track of it -->
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
+
 
         <div class="text-center mt-3">
             <p class="mb-1" style="color: #333;">Don't have an account?

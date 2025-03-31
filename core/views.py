@@ -36,10 +36,12 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            auth_login(request, new_user)
-            return redirect('home')
+            auth_login(request, new_user)  
+            return redirect('home')  
+            messages.error(request, "Registration failed. Please try again.")
     else:
         form = RegisterForm()
+
     return render(request, 'register.html', {'form': form})
 
 
@@ -50,12 +52,14 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             auth_login(request, user)
-            next_url = request.GET.get('next', 'home')
-            return redirect('home')
+            next_url = request.GET.get('next')  
+            if next_url:  
+                return redirect(next_url)
+            else:  
+                return redirect('home')
         else:
             messages.error(request, 'Invalid Credentials')
     return render(request, 'login.html')
-
 
 def logout_view(request):
     logout(request)
@@ -193,7 +197,6 @@ def profile_view(request, username):
             user_profile.email = form.cleaned_data['email']
             user_profile.save()
             form.save()
-            messages.success(request, "Profile updated successfully!")
             return redirect('profile', username=user_profile.username)
     else:
         form = ProfileUpdateForm(instance=profile)
