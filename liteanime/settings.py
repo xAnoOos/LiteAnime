@@ -3,22 +3,20 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-a8ev8na1cs*7r!5u0g9supnta0@69iuj=)+k-4$h(l2_k^d7n1'
 DEBUG = True
 
-#  Static Files
+ALLOWED_HOSTS = ['16.171.40.48', 'localhost', '127.0.0.1', 'liteanime.com']
+
+# Static Files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "liteanime" / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-#  Media Files
+# Media Files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-ALLOWED_HOSTS = ['16.171.40.48', 'localhost', '127.0.0.1', 'liteanime.com']
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -61,7 +59,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'liteanime.wsgi.application'
 
-
 # Database
 DATABASES = {
     'default': {
@@ -74,7 +71,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -82,6 +78,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 6
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -91,13 +90,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Secure cookies & HTTPS redirect (important in production)
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -91,14 +91,24 @@
 
 <div class="profile-container">
     <div class="profile-sidebar">
-        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'default-avatar.png' %}{% endif %}"
+        <img id="preview-avatar"
+            src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'default-avatar.png' %}{% endif %}"
             alt="Avatar">
-        <h3>{{ user.username }}</h3>
-        <p>{{ user.email }}</p>
+        <h3 id="preview-username">{{ user.username }}</h3>
+        <p id="preview-email">{{ user.email }}</p>
     </div>
 
     <div class="profile-content">
         <h2>Your Profile</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
@@ -120,4 +130,39 @@
         </form>
     </div>
 </div>
+
+<script>
+    const usernameInput = document.getElementById("id_username");
+    const emailInput = document.getElementById("id_email");
+    const avatarInput = document.getElementById("id_avatar");
+
+    const previewUsername = document.getElementById("preview-username");
+    const previewEmail = document.getElementById("preview-email");
+    const previewAvatar = document.getElementById("preview-avatar");
+
+    if (usernameInput && previewUsername) {
+        usernameInput.addEventListener("input", function () {
+            previewUsername.textContent = this.value || "Your Username";
+        });
+    }
+
+    if (emailInput && previewEmail) {
+        emailInput.addEventListener("input", function () {
+            previewEmail.textContent = this.value || "your@email.com";
+        });
+    }
+
+    if (avatarInput && previewAvatar) {
+        avatarInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewAvatar.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
 {% endblock %}
