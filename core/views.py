@@ -101,7 +101,7 @@ def create_thread_view(request):
             thread = form.save(commit=False)
             thread.user = request.user
             thread.save()
-            messages.success(request, "Thread created successfully!")
+            messages.success(request)
             return redirect('thread_detail', pk=thread.pk)
     else:
         form = ThreadForm()
