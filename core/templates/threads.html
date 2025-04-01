@@ -20,8 +20,7 @@
         }
 
         .navbar-brand img {
-            height: 90px;
-            width: 180px;
+            height: 30px;
         }
         
 
@@ -192,6 +191,24 @@
         .filter-form input::placeholder {
             color: #bbb;
         }
+
+        .create-thread-btn {
+        background: linear-gradient(135deg, #00bcd4, #1abc9c);
+        color: white;
+        padding: 10px 25px;
+        font-weight: bold;
+        border-radius: 30px;
+        box-shadow: 0 0 10px #00bcd4;
+        transition: all 0.3s ease-in-out;
+        text-decoration: none;
+    }
+
+    .create-thread-btn:hover {
+        background: linear-gradient(135deg, #1abc9c, #00bcd4);
+        box-shadow: 0 0 15px #00bcd4, 0 0 25px #1abc9c;
+        transform: scale(1.05);
+        color: black;
+    }
     </style>
 </head>
 
@@ -199,7 +216,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'logo-pic.png' %}" alt="LiteAnime Logo">
+                <img src="{% static 'logo-imag.png' %}" alt="Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -235,8 +252,10 @@
 
     <main class="flex-grow-1">
         <div class="container my-5 text-light">
-            <h2 class="mb-4">📊 All Threads</h2>
-
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="m-0">📊 All Threads</h2>
+                <a href="{% url 'create_thread' %}" class="create-thread-btn"> Create Thread</a>
+            </div>
             <!-- Search & Filter -->
             <form method="get" class="filter-form">
                 <input type="text" name="q" class="form-control" placeholder="Search threads..."
@@ -289,10 +308,6 @@
                 <a href="?page={{ threads.next_page_number }}&sort={{ request.GET.sort }}">Next</a>
                 <a href="?page={{ threads.paginator.num_pages }}&sort={{ request.GET.sort }}">Last</a>
                 {% endif %}
-            </div>
-
-            <div class="mt-4">
-                <a href="{% url 'create_thread' %}" class="btn btn-primary">Create Thread</a>
             </div>
         </div>
     </main>

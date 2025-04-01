@@ -71,7 +71,7 @@ def thread_list(request):
         threads = threads.order_by('-views')
 
     from django.core.paginator import Paginator
-    paginator = Paginator(threads, 6)
+    paginator = Paginator(threads, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
