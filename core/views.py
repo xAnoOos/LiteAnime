@@ -31,12 +31,10 @@ def register(request):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             auth_login(request, new_user)
-            messages.success(request, "Registration successful!")
             return redirect('home')
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
-
 
 # Login view with support for `next` redirect
 def login_view(request):
