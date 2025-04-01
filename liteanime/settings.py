@@ -94,9 +94,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Secure cookies & HTTPS redirect (important in production)
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False  # i will change to true when uploaded (to open in https insted of http)
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
