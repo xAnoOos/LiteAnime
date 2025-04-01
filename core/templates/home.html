@@ -16,12 +16,12 @@
         }
 
         .navbar {
-            background-color: #4a1415;
+            background-color: #150f0f;
         }
 
         .navbar-brand img {
-            height: 30px;
-            margin-right: 10px;
+            height: 80px;
+            width: 110px;
         }
 
         .hero {
@@ -117,7 +117,7 @@
         }
 
         footer {
-            background-color: #1a0303;
+            background-color: #100f0f;
             color: #ccc;
             padding: 20px 0;
             text-align: center;
@@ -148,10 +148,9 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'logos.png' %}" alt="LiteAnime Logo" height="30" class="me-2">
-                <strong>LiteAnime</strong>
+        <div class="container d-flex justify-content-between">
+            <a class="navbar-brand " href="{% url 'home' %}">
+                <img src="{% static 'logo-pic.png' %}" alt="LiteAnime Logo" height="30" class="me-2">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -277,32 +276,53 @@
         </div>
     </section>
 
-    <!-- Highlighted Comments -->
+    <!-- Highlighted Comments  -->
     <section class="container my-5">
-        <h3 class="section-title">💬 Highlighted Comments</h3>
-        {% for comment in top_comments %}
-        <div class="highlight-box d-flex align-items-start gap-3">
-            {% if comment.user.profile.avatar %}
-            <img src="{{ comment.user.profile.avatar.url }}" class="rounded-circle" width="40" height="40"
-                style="object-fit: cover;">
-            {% else %}
-            <img src="{% static 'default-avatar.jpg' %}" class="rounded-circle" width="40" height="40"
-                style="object-fit: cover;">
-            {% endif %}
-            <div>
-                <a href="{% url 'thread_detail' comment.thread.id %}"
-                    class="text-decoration-none text-light d-block mb-1">
-                    <strong>{{ comment.user.username }}</strong>: {{ comment.content|truncatewords:15 }}
-                </a>
-                <div class="meta">
-                    👁️ {{ comment.thread.views }} Views
+        <h3 class="section-title text-center">💬 Highlighted Comments</h3>
+
+        <div id="highlightedCommentsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for comment in top_comments %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="d-flex justify-content-center">
+                        <div class="highlight-box d-flex align-items-start gap-3 w-75">
+                            {% if comment.user.profile.avatar %}
+                            <img src="{{ comment.user.profile.avatar.url }}" class="rounded-circle" width="60"
+                                height="60" style="object-fit: cover;">
+                            {% else %}
+                            <img src="{% static 'default-avatar.jpg' %}" class="rounded-circle" width="60" height="60"
+                                style="object-fit: cover;">
+                            {% endif %}
+                            <div>
+                                <a href="{% url 'thread_detail' comment.thread.id %}"
+                                    class="text-decoration-none text-light d-block mb-2">
+                                    <strong class="fs-5">{{ comment.user.username }}</strong><br>
+                                    <span class="fs-6">{{ comment.content|truncatewords:20 }}</span>
+                                </a>
+                                <div class="text-light" style="font-size: 0.9rem;">
+                                    👁️ {{ comment.thread.views }} Views • ✍️ {{ comment.thread.title }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#highlightedCommentsCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#highlightedCommentsCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
         </div>
-        {% endfor %}
     </section>
 
-    <!-- Why LiteAnime (new design) -->
+
+    <!-- Why LiteAnime  -->
     <section class="container my-5">
         <h3 class="section-title">✨ Why LiteAnime?</h3>
         <div class="why-liteanime-showcase">
