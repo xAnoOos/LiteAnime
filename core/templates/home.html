@@ -258,7 +258,7 @@
                         {% endif %}
                         <div>
                             <a href="{% url 'thread_detail' thread.id %}" class="text-white">{{ thread.title }}</a><br>
-                            <small class="text-light" style="font-size: 0.9rem;">👁️ {{ thread.views }} views</small>
+                            <small class="text-light" style="font-size: 0.9rem;"></small>
                         </div>
                     </li>
                     {% endfor %}
@@ -311,7 +311,7 @@
                                     <span class="fs-6">{{ comment.content|truncatewords:20 }}</span>
                                 </a>
                                 <div class="text-light" style="font-size: 0.9rem;">
-                                    👁️ {{ comment.thread.views }} Views • 🧾 {{ comment.thread.title }}
+                                    • 🧾 {{ comment.thread.title }}
                                 </div>
                             </div>
                         </div>
