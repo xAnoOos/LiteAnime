@@ -220,8 +220,8 @@
                         <img src="{% static 'default-thread.jpg' %}" class="thread-image img-fluid">
                         {% endif %}
                         <div>
-                            <a href="{% url 'thread_detail' thread.id %}" class="text-white text-decoration-none">{{
-                                thread.title }}</a>
+                            <a href="{% url 'thread_detail' thread.id %}" class="text-white text-decoration-none">
+                                {{ thread.title }}</a>
                         </div>
                     </li>
                     {% endfor %}
@@ -238,8 +238,8 @@
                         <img src="{% static 'default-thread.jpg' %}" class="thread-image img-fluid">
                         {% endif %}
                         <div>
-                            <a href="{% url 'thread_detail' thread.id %}" class="text-white text-decoration-none">{{
-                                thread.title }}</a><br>
+                            <a href="{% url 'thread_detail' thread.id %}" class="text-white text-decoration-none">
+                                {{ thread.title }}</a><br>
                             <small class="text-light">{{ thread.created_at|date:"M d, Y" }} | 🖋️
                                 {{ thread.user.username }}</small>
                         </div>
