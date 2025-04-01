@@ -261,8 +261,12 @@
                         {% endif %}
                         <div class="thread-info ms-3">
                             <a href="{% url 'thread_detail' thread.id %}" class="text-light">{{ thread.title }}</a>
-                            <p class="text-muted">{{ thread.created_at|date:"M d, Y" }} | 💬 {{ thread.comment_count }}
-                                comments</p>
+                            <p class="text-light" style="font-size: 0.9rem;">
+                                {{ thread.created_at|date:"M d, Y" }} |
+                                👤 {{ thread.user.username }} | |
+                                💬 {{ thread.comment_count }} comments
+                            </p>
+                            
                         </div>
                     </div>
                 </div>

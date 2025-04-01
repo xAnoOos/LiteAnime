@@ -59,7 +59,7 @@ def logout_view(request):
 
 # Thread list view with optional search and sorting
 def thread_list(request):
-    threads = Thread.objects.all()
+    threads = Thread.objects.annotate(comment_count=Count('comments'))
     query = request.GET.get('q')
     sort = request.GET.get('sort')
 
