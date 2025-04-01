@@ -20,6 +20,8 @@
     label {
         color: #000;
         font-weight: 500;
+        margin-bottom: 5px;
+        display: block;
     }
 
     .errorlist {
@@ -37,45 +39,69 @@
         margin-top: -10px;
         margin-bottom: 10px;
     }
+
+    @media (max-width: 576px) {
+        .register-box {
+            width: 100% !important;
+            padding: 25px 15px !important;
+            border-radius: 0 !important;
+        }
+
+        .register-box h2 {
+            font-size: 1.5rem;
+        }
+
+        .btn {
+            font-size: 1rem;
+        }
+
+        input {
+            font-size: 0.95rem;
+        }
+    }
 </style>
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 85vh;">
-    <div class="register-box bg-light p-4 rounded" style="width: 350px;">
-        <h2 class="text-center text-dark mb-4">Create Account</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <div class="register-box bg-light p-4 rounded shadow">
+                <h2 class="text-center text-dark mb-4">Create Account</h2>
 
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
 
-            {% for field in form %}
-            <label>{{ field.label }}</label>
-            {{ field }}
+                    {% for field in form %}
+                    <label>{{ field.label }}</label>
+                    {{ field }}
 
-            {% if field.name == "password" %}
-            <div class="password-tip">
-                • At least 6 characters<br>
-                • At least 1 number<br>
-                • At least 1 special character (e.g. @, !, #)
+                    {% if field.name == "password" %}
+                    <div class="password-tip">
+                        • At least 6 characters<br>
+                        • At least 1 number<br>
+                        • At least 1 special character (e.g. @, !, #)
+                    </div>
+                    {% endif %}
+
+                    {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Register</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p class="mb-1" style="color: #333;">Already have an account?
+                        <a href="{% url 'login' %}" style="color: #2575fc; font-weight: 500;">Login here</a>
+                    </p>
+                    <a href="{% url 'home' %}" class="btn btn-outline-dark btn-sm mt-2">← Back to Home</a>
+                </div>
             </div>
-            {% endif %}
-
-            {% if field.errors %}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endfor %}
-
-            <button type="submit" class="btn btn-primary w-100 mt-2">Register</button>
-        </form>
-
-        <div class="text-center mt-3">
-            <p class="mb-1" style="color: #333;">Already have an account?
-                <a href="{% url 'login' %}" style="color: #2575fc; font-weight: 500;">Login here</a>
-            </p>
-            <a href="{% url 'home' %}" class="btn btn-outline-dark btn-sm mt-2">← Back to Home</a>
         </div>
     </div>
 </div>
