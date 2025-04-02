@@ -25,8 +25,6 @@ class NewsListCreateView(generics.ListCreateAPIView):
     serializer_class = NewsSerializer
 
     def get_permissions(self):
-        if self.request.method == 'POST':
-            return [permissions.IsAdminUser()]
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
