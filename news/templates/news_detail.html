@@ -28,8 +28,8 @@
     }
 
     .news-image {
-        width: 100%;
-        max-height: 450px;
+        width: 50%;
+        max-height: 250px;
         object-fit: cover;
         border-radius: 12px;
         margin-bottom: 30px;
@@ -44,7 +44,7 @@
 <div class="news-container">
     <div class="news-title" id="news-title">Loading...</div>
     <div class="news-meta" id="news-meta"></div>
-    <img id="news-image" class="news-image d-none" />
+    <img id="news-image" class="img-fluid rounded mb-4 d-none" alt="News Image" style="max-height: 350px; object-fit: cover; display: block; margin-left: auto; margin-right: auto;">
     <div class="news-content" id="news-content"></div>
 
     <a href="{% url 'news_list' %}" class="btn btn-outline-info mt-4">⬅ Back to News</a>
