@@ -35,9 +35,8 @@ class NewsListCreateView(generics.ListCreateAPIView):
 
         if not title or not content:
             raise serializers.ValidationError("Title and content are required.")
-        
-        news = serializer.save(user=self.request.user)  # Ensure `user` is being saved
-        return news
+
+        serializer.save(user=self.request.user)
     
 class NewsDetailView(generics.RetrieveAPIView):
     queryset = News.objects.all()
