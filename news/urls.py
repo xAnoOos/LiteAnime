@@ -16,7 +16,7 @@ urlpatterns = [
     path('api/<int:pk>/comment/', NewsCommentCreateView.as_view(), name='api_news_comment'),
     path('news/', news_list_page, name='news_list'),
     path('news/<int:pk>/', views.NewsDetailView.as_view(), name='news-detail-api'),
-    path('api/news/', views.NewsListCreateView.as_view(), name='news-list-api'),
+    path('news/api/', views.NewsListCreateView.as_view(), name='news-list-api'),
     path('news/<int:pk>/comment/', views.NewsCommentCreateView.as_view(), name='news-comment-api'),
 
 
