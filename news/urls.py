@@ -11,7 +11,7 @@ from .views import (
 
 urlpatterns = [
     # API endpoints
-    path('api/', NewsListCreateView.as_view(), name='news_list'),
+    path('api/', NewsListCreateView.as_view(), name='api_news_list'),
     path('api/<int:pk>/', NewsDetailView.as_view(), name='api_news_detail'),
     path('api/<int:pk>/comment/', NewsCommentCreateView.as_view(), name='api_news_comment'),
     

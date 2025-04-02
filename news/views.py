@@ -30,20 +30,14 @@ class NewsListCreateView(generics.ListCreateAPIView):
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
-        # Get title and content from request data
         title = self.request.data.get("title", "").strip()
         content = self.request.data.get("content", "").strip()
 
-        # Validate that title and content are provided
         if not title or not content:
             raise serializers.ValidationError("Title and content are required.")
-
-        # Create the news item
-        news = News.objects.create(title=title, content=content, user=self.request.user)
-
-        # Serialize the news and return it in the response
-        serializer = NewsSerializer(news)
-        return Response(serializer.data, status=201)
+        
+        news = serializer.save(user=self.request.user)  # Ensure `user` is being saved
+        return news
     
 class NewsDetailView(generics.RetrieveAPIView):
     queryset = News.objects.all()
