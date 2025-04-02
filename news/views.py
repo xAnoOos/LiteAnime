@@ -36,7 +36,12 @@ class NewsListCreateView(generics.ListCreateAPIView):
         if not title or not content:
             raise serializers.ValidationError("Title and content are required.")
 
-        serializer.save(user=self.request.user)
+        user = self.request.user if self.request.user.is_authenticated else None
+
+        if not user:
+            raise serializers.ValidationError("You must be logged in to post news.")
+
+        serializer.save(user=user)
     
 class NewsDetailView(generics.RetrieveAPIView):
     queryset = News.objects.all()
