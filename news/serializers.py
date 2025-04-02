@@ -27,3 +27,8 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ['id', 'title', 'content', 'image', 'created_at', 'user', 'comments']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user if request else None
+        return News.objects.create(user=user, **validated_data)
