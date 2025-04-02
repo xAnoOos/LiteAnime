@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .news-container {
+        background-color: rgba(20, 20, 20, 0.95);
+        padding: 40px;
+        border-radius: 20px;
+        color: white;
+        max-width: 960px;
+        margin: 50px auto;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        line-height: 1.7;
+    }
+
+    .news-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #00bcd4;
+    }
+
+    .news-meta {
+        font-size: 0.95rem;
+        color: #bbb;
+        margin-bottom: 25px;
+    }
+
+    .news-image {
+        width: 100%;
+        max-height: 450px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        border: 2px solid #00bcd4;
+    }
+
+    .news-content p {
+        margin-bottom: 1.2rem;
+    }
+</style>
+
+<div class="news-container">
+    <div class="news-title" id="news-title">Loading...</div>
+    <div class="news-meta" id="news-meta"></div>
+    <img id="news-image" class="news-image d-none" />
+    <div class="news-content" id="news-content"></div>
+
+    <a href="{% url 'news_list' %}" class="btn btn-outline-info mt-4">⬅ Back to News</a>
+</div>
+
+<script>
+    const newsId = window.location.pathname.split("/")[2];
+    const apiUrl = `/api/${newsId}/`;
+
+    async function fetchNews() {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        document.getElementById("news-title").innerText = data.title;
+        document.getElementById("news-meta").innerText = `✍️ ${data.user.username} | 📅 ${new Date(data.created_at).toLocaleDateString()}`;
+
+        if (data.image) {
+            const img = document.getElementById("news-image");
+            img.src = data.image;
+            img.classList.remove('d-none');
+        }
+
+        const contentEl = document.getElementById("news-content");
+        const paragraphs = data.content.split("\n");
+        contentEl.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchNews);
+</script>
+{% endblock %}

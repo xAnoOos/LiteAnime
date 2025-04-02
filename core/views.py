@@ -6,9 +6,11 @@ from django.http import JsonResponse
 from django.db.models import Q, Count
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-
+from django.views.decorators.csrf import csrf_exempt
 from .forms import RegisterForm, ThreadForm, ProfileUpdateForm
-from .models import Thread, Comment, Profile
+from .models import Thread, Comment, Profile, Notification
+from django.urls import reverse
+
 
 # Home page with trending/latest threads and top comments
 def home(request):
@@ -84,7 +86,7 @@ def thread_detail_view(request, pk):
     thread = get_object_or_404(Thread, pk=pk)
     thread.views += 1
     thread.save()
-    comments = thread.comments.all().order_by('-created_at')
+    comments = thread.comments.filter(parent__isnull=True).order_by('-created_at')
     return render(request, 'thread_detail.html', {
         'thread': thread,
         'comments': comments
@@ -145,13 +147,47 @@ def profile_view(request, username):
     })
 
 # AJAX: Add comment to a thread
-@login_required
+@csrf_exempt
 @require_POST
+@login_required
 def ajax_add_comment(request, pk):
-    content = request.POST.get('content')
-    thread = get_object_or_404(Thread, pk=pk)
-    Comment.objects.create(thread=thread, user=request.user, content=content)
-    return JsonResponse({'status': 'success'})
+    content = request.POST.get("content")
+    parent_id = request.POST.get("parent")
+    thread = Thread.objects.get(pk=pk)
+
+    if content:
+        comment = Comment.objects.create(
+            thread=thread,
+            user=request.user,
+            content=content,
+            parent_id=parent_id if parent_id else None
+        )
+
+        from core.models import Notification
+        from django.urls import reverse
+
+        if thread.user != request.user:
+            Notification.objects.create(
+                recipient=thread.user,
+                sender=request.user,
+                message=f"{request.user.username} commented on your thread: {thread.title}",
+                url=request.build_absolute_uri(reverse('thread_detail', args=[thread.pk]))
+            )
+
+        if parent_id:
+            parent_comment = Comment.objects.filter(pk=parent_id).first()
+            if parent_comment and parent_comment.user != request.user:
+                Notification.objects.create(
+                    recipient=parent_comment.user,
+                    sender=request.user,
+                    message=f"{request.user.username} replied to your comment",
+                    url=request.build_absolute_uri(reverse('thread_detail', args=[thread.pk]))
+                )
+
+        return JsonResponse({'status': 'success', 'comment_id': comment.id})
+
+    return JsonResponse({'status': 'error', 'message': 'Empty content'})
+
 
 # AJAX: Load trending threads
 def ajax_load_trending(request):
@@ -201,3 +237,13 @@ def contact_submit(request):
     print(f"Contact message from {name} <{email}>: {message}")
     messages.success(request, "Thanks for reaching out! We'll get back to you soon.")
     return redirect('home')
+
+@login_required
+def notifications_view(request):
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+
+    if request.method == 'POST':
+        notifications.update(is_read=True)
+        return redirect('notifications')
+
+    return render(request, 'notifications.html', {'notifications': notifications})

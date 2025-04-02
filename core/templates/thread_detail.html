@@ -57,14 +57,25 @@
 
     .comment {
         margin-bottom: 15px;
+        padding-left: 10px;
+        border-left: 2px solid #00bcd4;
     }
 
     .comment strong {
         color: #00bcd4;
     }
 
-    .back-link {
-        margin-top: 20px;
+    .reply-button {
+        font-size: 0.8rem;
+        color: #0cf;
+        cursor: pointer;
+        margin-top: 5px;
+        display: inline-block;
+    }
+
+    .reply-box {
+        margin-left: 25px;
+        margin-top: 10px;
     }
 
     textarea.form-control {
@@ -75,16 +86,6 @@
 
     textarea.form-control::placeholder {
         color: #aaa;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
     }
 
     @media (max-width: 576px) {
@@ -132,22 +133,28 @@
     </div>
 
     <hr>
-
     <h4>💬 Comments</h4>
-    <div class="comment-box">
+    <div class="comment-box" id="comments-section">
         {% for comment in comments %}
-        <div class="comment">
-            <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
-        </div>
-        {% empty %}
-        <p>No comments yet. Be the first to comment!</p>
+            {% include 'threads/partials/comment.html' with comment=comment depth=0 %}
+
+            {% for reply in comment.replies.all %}
+                {% include 'threads/partials/comment.html' with comment=reply depth=1 %}
+
+                {% for subreply in reply.replies.all %}
+                    {% include 'threads/partials/comment.html' with comment=subreply depth=2 %}
+                {% endfor %}
+            {% endfor %}
         {% endfor %}
+
+
 
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'ajax_add_comment' thread.pk %}" id="comment-form">
             {% csrf_token %}
             <textarea name="content" id="comment-content" class="form-control mt-2 mb-2"
                 placeholder="Write a comment..." required></textarea>
+            <input type="hidden" name="parent" id="parent-id">
             <button type="submit" class="btn btn-primary">Post Comment</button>
         </form>
         {% else %}
@@ -161,16 +168,26 @@
 </div>
 
 <script>
+    function replyTo(id) {
+        document.getElementById("parent-id").value = id;
+        document.getElementById("comment-content").focus();
+    }
+
     document.getElementById('comment-form')?.addEventListener('submit', function (e) {
         e.preventDefault();
         let content = document.getElementById("comment-content").value;
+        let parent = document.getElementById("parent-id").value;
+
         fetch("{% url 'ajax_add_comment' thread.pk %}", {
             method: "POST",
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams({ content })
+            body: new URLSearchParams({
+                content: content,
+                parent: parent
+            })
         })
             .then(res => res.json())
             .then(data => {

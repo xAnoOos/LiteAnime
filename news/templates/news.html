@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .news-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .news-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .news-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .news-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #00bcd4;
+    }
+
+    .news-snippet {
+        color: #ccc;
+    }
+
+    .news-meta {
+        font-size: 0.85rem;
+        color: #999;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="news-header">
+        <h2 class="text-light">📰 Latest News</h2>
+        {% if user.is_staff %}
+        <a href="{% url 'create_news_page' %}" class="btn btn-outline-success">➕ Post News</a>
+        {% endif %}
+    </div>
+
+    <div id="news-list" class="row g-4"></div>
+</div>
+
+<script>
+    async function loadNews() {
+        const res = await fetch('/news/api/');
+        const data = await res.json();
+        const container = document.getElementById('news-list');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = `<p class="text-center text-light">No news yet.</p>`;
+            return;
+        }
+
+        data.forEach(news => {
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4';
+
+            const card = document.createElement('div');
+            card.className = 'news-card bg-dark p-3 rounded shadow';
+
+            const img = document.createElement('img');
+            img.src = news.image || "{% static 'default-thread.jpg' %}";
+            img.style.width = "100%";
+            img.style.height = "180px";
+            img.style.objectFit = "cover";
+            img.style.borderRadius = "8px";
+            img.classList.add("mb-3");
+
+            const title = document.createElement('a');
+            title.href = `/news/${news.id}/`;
+            title.innerText = news.title;
+            title.className = 'news-title d-block mb-1 text-decoration-none';
+
+            const meta = document.createElement('div');
+            meta.className = 'news-meta mb-2';
+            meta.innerHTML = `📅 ${new Date(news.created_at).toLocaleDateString()} | 👤 ${news.user.username}`;
+
+            const snippet = document.createElement('p');
+            snippet.className = 'news-snippet';
+            snippet.innerText = news.content.slice(0, 100) + '...';
+
+            card.appendChild(img);
+            card.appendChild(title);
+            card.appendChild(meta);
+            card.appendChild(snippet);
+
+            col.appendChild(card);
+            container.appendChild(col);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadNews);
+</script>
+{% endblock %}

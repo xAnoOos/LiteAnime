@@ -17,6 +17,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('accounts/login/', views.login_view, name='login'),
+    path('notifications/', views.notifications_view, name='notifications'),
+
 
     # Profile
     path('profile/<str:username>/', views.profile_view, name='profile'),

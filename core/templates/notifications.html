@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .notification-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 25px;
+        background-color: #1e1e1e;
+        border-radius: 12px;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+    }
+
+    .notification {
+        background-color: #2a2a2a;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        transition: background 0.2s;
+    }
+
+    .notification:hover {
+        background-color: #333;
+    }
+
+    .notification img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 2px solid #00bcd4;
+    }
+
+    .notification-content {
+        flex-grow: 1;
+    }
+
+    .notification-content a {
+        color: #00d9ff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .notification-content a:hover {
+        text-decoration: underline;
+    }
+
+    .notification-date {
+        font-size: 0.8rem;
+        color: #aaa;
+    }
+
+    @media (max-width: 576px) {
+        .notification {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .notification img {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="notification-container">
+    <h3 class="mb-4 text-center">🔔 Your Notifications</h3>
+
+    <form method="post" class="text-end mb-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-outline-light">
+            ✔ Mark all as read
+        </button>
+    </form>
+
+
+    {% if notifications %}
+    {% for note in notifications %}
+    <div class="notification">
+        <img src="{% if note.sender.profile.avatar %}{{ note.sender.profile.avatar.url }}{% else %}{% static 'default-avatar.jpg' %}{% endif %}"
+            alt="Avatar">
+
+        <div class="notification-content">
+            <div>{{ note.message|safe }}</div>
+            {% if note.url %}
+            <a href="{{ note.url }}">View →</a>
+            {% endif %}
+            <div class="notification-date">{{ note.created_at|date:"M d, Y H:i" }}</div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-light text-center">No notifications yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
