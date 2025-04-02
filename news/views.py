@@ -28,12 +28,6 @@ class NewsListCreateView(generics.ListCreateAPIView):
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
-        print("🔍 SESSION DEBUGGING")
-        print("user:", self.request.user)
-        print("is_authenticated:", self.request.user.is_authenticated)
-        print("is_staff:", self.request.user.is_staff)
-        print("cookies:", self.request.COOKIES)
-        print("====================")
 
         title = self.request.data.get("title", "").strip()
         content = self.request.data.get("content", "").strip()
