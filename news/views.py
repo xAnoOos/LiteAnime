@@ -28,18 +28,20 @@ class NewsListCreateView(generics.ListCreateAPIView):
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
+        print("🔍 SESSION DEBUGGING")
+        print("user:", self.request.user)
+        print("is_authenticated:", self.request.user.is_authenticated)
+        print("is_staff:", self.request.user.is_staff)
+        print("cookies:", self.request.COOKIES)
+        print("====================")
+
         title = self.request.data.get("title", "").strip()
         content = self.request.data.get("content", "").strip()
 
         if not title or not content:
             raise serializers.ValidationError("Title and content are required.")
 
-        user = self.request.user if self.request.user.is_authenticated else None
-
-        if not user:
-            raise serializers.ValidationError("You must be logged in to post news.")
-
-        serializer.save(user=user)
+        serializer.save(user=self.request.user)
     
 class NewsDetailView(generics.RetrieveAPIView):
     queryset = News.objects.all()
