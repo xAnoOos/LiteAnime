@@ -31,4 +31,8 @@ class NewsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user if request else None
-        return News.objects.create(user=user, **validated_data)
+        news = News.objects.create(user=user, **validated_data)  # Ensures the news item is created with the current user
+        return news
+    
+
+    
