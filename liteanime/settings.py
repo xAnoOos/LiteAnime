@@ -62,6 +62,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'liteanime.wsgi.application'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://liteanime.com',
+    'https://www.liteanime.com'
+]
+
+
 # Database
 DATABASES = {
     'default': {

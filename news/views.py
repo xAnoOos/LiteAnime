@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions,serializers
 from .models import News, NewsComment
 from .serializers import NewsSerializer, NewsCommentSerializer
 from django.shortcuts import render, get_object_or_404
@@ -17,6 +17,7 @@ from django.http import HttpResponseForbidden
 
 
 
+
 class NewsListCreateView(generics.ListCreateAPIView):
     queryset = News.objects.all().order_by('-created_at')
     serializer_class = NewsSerializer
@@ -27,6 +28,12 @@ class NewsListCreateView(generics.ListCreateAPIView):
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
+        title = self.request.data.get("title", "").strip()
+        content = self.request.data.get("content", "").strip()
+
+        if not title or not content:
+            raise serializers.ValidationError("Title and content are required.")
+
         serializer.save(user=self.request.user)
 
 class NewsDetailView(generics.RetrieveAPIView):
