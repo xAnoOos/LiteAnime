@@ -86,6 +86,7 @@ def thread_detail_view(request, pk):
         'comments': comments
     })
 
+# Create new thread (requires login)
 @login_required
 def create_thread_view(request):
     if request.method == 'POST':
@@ -99,6 +100,7 @@ def create_thread_view(request):
         form = ThreadForm()
     return render(request, 'create_thread.html', {'form': form})
 
+# Profile view and update
 @login_required
 def profile_view(request, username):
     user_profile = get_object_or_404(User, username=username)
@@ -138,6 +140,7 @@ def profile_view(request, username):
         'is_own_profile': is_own_profile
     })
 
+# AJAX: Add comment to a thread
 @csrf_exempt
 @require_POST
 @login_required
