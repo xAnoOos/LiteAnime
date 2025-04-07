@@ -5,10 +5,13 @@
 <style>
     .profile-container {
         display: flex;
+        flex-wrap: wrap;
         min-height: 80vh;
         padding: 40px;
         background-color: #1e1e1e;
         color: #fff;
+        gap: 30px;
+        justify-content: center;
     }
 
     .profile-sidebar {
@@ -18,7 +21,6 @@
         text-align: center;
         border-radius: 15px;
         box-shadow: 0 0 10px #00bcd4;
-        margin-right: 30px;
     }
 
     .profile-sidebar img {
@@ -40,7 +42,7 @@
     }
 
     .profile-content {
-        flex-grow: 1;
+        flex: 1 1 400px;
         background-color: #222;
         border-radius: 15px;
         padding: 30px;
@@ -87,37 +89,109 @@
     .save-btn:hover {
         background-color: #0097a7;
     }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 20px;
+        }
+
+        .profile-sidebar {
+            width: 100%;
+            margin-right: 0;
+        }
+
+        .profile-content {
+            padding: 20px;
+        }
+
+        .form-control {
+            font-size: 0.95rem;
+        }
+    }
 </style>
 
 <div class="profile-container">
     <div class="profile-sidebar">
-        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'default-avatar.png' %}{% endif %}"
+        <img id="preview-avatar"
+            src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'default-avatar.png' %}{% endif %}"
             alt="Avatar">
-        <h3>{{ user.username }}</h3>
-        <p>{{ user.email }}</p>
+        <h3 id="preview-username">{{ user.username }}</h3>
+        <p id="preview-email">{{ user.email }}</p>
     </div>
 
     <div class="profile-content">
         <h2>Your Profile</h2>
-        <form method="POST" enctype="multipart/form-data">
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="needs-validation mt-4">
             {% csrf_token %}
-            <div class="row">
+            <div class="row g-4">
                 <div class="col-md-6">
-                    <label class="form-label">Username</label>
-                    {{ form.username }}
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Email</label>
-                    {{ form.email }}
+                    <label for="id_username" class="form-label">👤 Username</label>
+                    <input type="text" name="username" id="id_username" value="{{ form.username.value }}"
+                        class="form-control form-control-lg shadow-sm">
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Change Avatar</label>
-                    {{ form.avatar }}
+                    <label for="id_email" class="form-label">📧 Email</label>
+                    <input type="email" name="email" id="id_email" value="{{ form.email.value }}"
+                        class="form-control form-control-lg shadow-sm">
+                </div>
+
+                <div class="col-md-12">
+                    <label for="id_avatar" class="form-label"> Edit Your Image</label>
+                    <input type="file" name="avatar" id="id_avatar"
+                        class="form-control form-control-lg shadow-sm bg-dark text-light border-secondary">
                 </div>
             </div>
-            <button type="submit" class="save-btn">Save Changes</button>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-lg px-5 py-2 fw-bold"
+                    style="background-color: #00bcd4; color: #000; border-radius: 25px; transition: 0.3s ease;">
+                    Save Changes
+                </button>
+            </div>
         </form>
     </div>
 </div>
+
+<script>
+    const usernameInput = document.getElementById("id_username");
+    const emailInput = document.getElementById("id_email");
+    const avatarInput = document.getElementById("id_avatar");
+
+    const previewUsername = document.getElementById("preview-username");
+    const previewEmail = document.getElementById("preview-email");
+    const previewAvatar = document.getElementById("preview-avatar");
+
+    if (usernameInput && previewUsername) {
+        usernameInput.addEventListener("input", function () {
+            previewUsername.textContent = this.value || "Your Username";
+        });
+    }
+
+    if (emailInput && previewEmail) {
+        emailInput.addEventListener("input", function () {
+            previewEmail.textContent = this.value || "your@email.com";
+        });
+    }
+
+    if (avatarInput && previewAvatar) {
+        avatarInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewAvatar.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
 {% endblock %}

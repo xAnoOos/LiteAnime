@@ -66,6 +66,31 @@
             transform: translateY(0);
         }
     }
+
+    @media (max-width: 576px) {
+        .about-section {
+            padding: 40px 15px;
+        }
+
+        .about-section h1 {
+            font-size: 2rem;
+        }
+
+        .about-section p {
+            font-size: 1rem;
+        }
+
+        .about-card {
+            padding: 20px;
+            margin: 15px 10px;
+        }
+
+        .contact-links a {
+            display: inline-block;
+            margin: 8px 6px;
+            font-size: 0.95rem;
+        }
+    }
 </style>
 
 <div class="about-section">
@@ -83,7 +108,7 @@
     <div class="about-card">
         <h3>👨‍💻 Built By</h3>
         <p>This project is crafted with passion by <strong>Anas Obaid</strong> — combining full-stack development, clean
-            UI design, and love for anime culture.</p>
+            UI design, and love for sharing cultures.</p>
     </div>
 
     <div class="contact-links">
@@ -92,5 +117,4 @@
         <a href="https://discord.com" target="_blank">Discord</a>
     </div>
 </div>
-
 {% endblock %}

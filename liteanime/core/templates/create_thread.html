@@ -4,63 +4,105 @@
 {% block content %}
 <style>
     .create-thread-container {
-        max-width: 700px;
+        max-width: 750px;
         margin: 60px auto;
-        background-color: #1e1e1e;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-        animation: fadeIn 0.8s ease-in-out;
+        background: linear-gradient(to bottom, #1e1e1e, #222);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+        animation: fadeIn 1s ease-out;
+        color: #fff;
     }
 
     .create-thread-container h2 {
         color: #00d9ff;
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 35px;
+        font-size: 2rem;
+        font-weight: bold;
+        letter-spacing: 1px;
     }
 
     .form-label {
-        color: #ffffff;
+        color: #aaa;
+        margin-bottom: 8px;
+        display: block;
         font-weight: 500;
+        font-size: 1.1rem;
     }
 
     .form-control {
         background-color: #2a2a2a;
         color: white;
-        border: 1px solid #444;
-        border-radius: 6px;
-        padding: 10px;
-        margin-bottom: 20px;
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 12px 14px;
+        margin-bottom: 25px;
+        width: 100%;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #00d9ff;
+        outline: none;
+        background-color: #333;
     }
 
     .form-control::placeholder {
         color: #bbb;
     }
 
-    .btn-primary {
+    .btn-create-thread {
         background-color: #00d9ff;
+        color: #000;
         border: none;
-        border-radius: 6px;
-        padding: 10px 30px;
+        border-radius: 25px;
+        padding: 12px 32px;
+        font-size: 1.1rem;
+        font-weight: bold;
         display: block;
         margin: 0 auto;
-        transition: all 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
     }
 
-    .btn-primary:hover {
+    .btn-create-thread:hover {
         background-color: #00bcd4;
         transform: scale(1.05);
+        color: #000;
     }
 
     @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translateY(-30px);
+            transform: translateY(20px);
         }
 
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .create-thread-container {
+            margin: 30px 15px;
+            padding: 25px 20px;
+        }
+
+        .create-thread-container h2 {
+            font-size: 1.5rem;
+        }
+
+        .form-control {
+            font-size: 0.95rem;
+            padding: 10px 12px;
+        }
+
+        .btn-create-thread {
+            font-size: 1rem;
+            padding: 10px 25px;
         }
     }
 </style>
@@ -81,7 +123,7 @@
             <label for="{{ form.image.id_for_label }}" class="form-label">Thread Image (Optional)</label>
             {{ form.image }}
         </div>
-        <button type="submit" class="btn btn-primary">Create Thread</button>
+        <button type="submit" class="btn btn-create-thread">Create Thread</button>
     </form>
 </div>
 {% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .error-container {
+        padding: 80px 20px;
+        text-align: center;
+        color: #fff;
+    }
+
+    .error-container h1 {
+        font-size: 6rem;
+        color: #ff4c4c;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .error-container p {
+        font-size: 1.25rem;
+        color: #ccc;
+        margin-bottom: 30px;
+    }
+
+    .error-container a.btn {
+        padding: 12px 28px;
+        font-size: 1.1rem;
+        border-radius: 25px;
+    }
+
+    @media (max-width: 576px) {
+        .error-container h1 {
+            font-size: 4rem;
+        }
+
+        .error-container p {
+            font-size: 1rem;
+        }
+
+        .error-container a.btn {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="error-container">
+    <h1>500</h1>
+    <p>Something went wrong on our end. We'll fix it soon!</p>
+    <a href="{% url 'home' %}" class="btn btn-outline-danger">Back to Home</a>
+</div>
+{% endblock %}

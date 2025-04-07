@@ -1,130 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+{% block content %}
+<style>
+    input {
+        color: #000 !important;
+        background-color: #f8f9fa;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
 
-        body {
-            background: linear-gradient(to right, #5d0cb3, #173571);
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    input::placeholder {
+        color: #888 !important;
+    }
 
+    label {
+        color: #000;
+        font-weight: 500;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .errorlist {
+        color: red;
+        list-style: none;
+        padding-left: 0;
+        font-size: 13px;
+        margin-top: -10px;
+        margin-bottom: 10px;
+    }
+
+    .password-tip {
+        font-size: 12px;
+        color: #555;
+        margin-top: -10px;
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 576px) {
         .register-box {
-            background-color: #fff;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            width: 350px;
+            width: 100% !important;
+            padding: 25px 15px !important;
+            border-radius: 0 !important;
         }
 
         .register-box h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            font-size: 1.5rem;
         }
 
-        .register-box label {
-            color: #555;
-            font-weight: 500;
-            margin-bottom: 8px;
-            display: block;
+        .btn {
+            font-size: 1rem;
         }
 
-        .register-box input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            transition: 0.3s;
+        input {
+            font-size: 0.95rem;
         }
+    }
+</style>
 
-        .register-box input:focus {
-            border-color: #2575fc;
-            outline: none;
-        }
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <div class="register-box bg-light p-4 rounded shadow">
+                <h2 class="text-center text-dark mb-4">Create Account</h2>
 
-        .register-box button {
-            width: 100%;
-            background-color: #2575fc;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
 
-        .register-box button:hover {
-            background-color: #1a5ed8;
-        }
+                    {% for field in form %}
+                    <label>{{ field.label }}</label>
+                    {{ field }}
 
-        .errorlist {
-            color: red;
-            list-style: none;
-            padding-left: 0;
-            margin-top: -15px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
+                    {% if field.name == "password" %}
+                    <div class="password-tip">
+                        • At least 6 characters<br>
+                        • At least 1 number<br>
+                        • At least 1 special character (e.g. @, !, #)
+                    </div>
+                    {% endif %}
 
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
+                    {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
 
-        .login-link a {
-            color: #2575fc;
-            text-decoration: none;
-        }
+                    <button type="submit" class="btn btn-primary w-100 mt-2">Register</button>
+                </form>
 
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="register-box">
-        <h2>Create Account</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-
-            {% for field in form %}
-            <label>{{ field.label }}</label>
-            {{ field }}
-            {% if field.errors %}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% endfor %}
-
-            <button type="submit">Register</button>
-        </form>
-
-        <div class="login-link">
-            Already have an account? <a href="{% url 'login' %}">Login here</a>
+                <div class="text-center mt-3">
+                    <p class="mb-1" style="color: #333;">Already have an account?
+                        <a href="{% url 'login' %}" style="color: #2575fc; font-weight: 500;">Login here</a>
+                    </p>
+                    <a href="{% url 'home' %}" class="btn btn-outline-dark btn-sm mt-2">← Back to Home</a>
+                </div>
+            </div>
         </div>
     </div>
-
-</body>
-
-</html>
+</div>
+{% endblock %}

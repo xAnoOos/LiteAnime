@@ -4,7 +4,11 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="LiteAnime  – join the conversation, discover new ideas, and share your passion for anime with fans worldwide.">
     <title>LiteAnime | All Threads</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'icon.ico' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -12,6 +16,7 @@
             background: #121212;
             color: #eee;
             font-family: 'Segoe UI', sans-serif;
+            padding-top: 70px;
         }
 
         .navbar {
@@ -20,7 +25,6 @@
 
         .navbar-brand img {
             height: 30px;
-            margin-right: 10px;
         }
 
         .hero {
@@ -106,8 +110,9 @@
             margin-bottom: 15px;
             padding: 15px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 15px;
+            flex-direction: row;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
@@ -121,7 +126,7 @@
             text-decoration: none;
             color: #fff;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .thread-card a:hover {
@@ -143,9 +148,25 @@
             gap: 15px;
         }
 
-        .thread-card img {
-            max-width: 60px;
-            max-height: 60px;
+        .thread-info {
+            flex-grow: 1;
+        }
+
+        @media (max-width: 576px) {
+            .thread-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .thread-image {
+                width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+
+            .thread-card a {
+                font-size: 1rem;
+            }
         }
 
         @keyframes fadeIn {
@@ -158,13 +179,12 @@
             }
         }
 
-        /* Styling for the filter and search inputs */
         .filter-form {
             display: flex;
-            gap: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 40px;
             justify-content: center;
-            align-items: center;
         }
 
         .filter-form input,
@@ -176,6 +196,7 @@
             border-radius: 5px;
             color: #eee;
             font-size: 1rem;
+            min-width: 180px;
         }
 
         .filter-form button {
@@ -190,109 +211,151 @@
         .filter-form input::placeholder {
             color: #bbb;
         }
+
+        .create-thread-btn {
+            background: linear-gradient(135deg, #00bcd4, #1abc9c);
+            color: white;
+            padding: 10px 25px;
+            font-weight: bold;
+            border-radius: 30px;
+            box-shadow: 0 0 10px #00bcd4;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+        }
+
+        .create-thread-btn:hover {
+            background: linear-gradient(135deg, #1abc9c, #00bcd4);
+            box-shadow: 0 0 15px #00bcd4, 0 0 25px #1abc9c;
+            transform: scale(1.05);
+            color: black;
+        }
     </style>
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'logo.png' %}" alt="LiteAnime Logo">
-                <strong>LiteAnime</strong>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm fixed-top">
+        <div class="container mt-0">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'logo-imag.png' %}" alt="Logo" height="30" class="me-2">
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+
+            <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'threads' %}">Threads</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'news_list' %}">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+
                     {% if user.is_authenticated %}
+                    <li class="nav-item position-relative">
+                        <a class="nav-link" href="{% url 'notifications' %}">
+                            🔔
+                            {% if unread_notifications > 0 %}
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ unread_notifications }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </li>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
+                            data-bs-toggle="dropdown">
                             {% if user.profile.avatar %}
-                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle" width="30" height="30">
+                            <img src="{{ user.profile.avatar.url }}" class="rounded-circle me-2" width="30" height="30"
+                                style="object-fit: cover;">
                             {% else %}
-                            <img src="{% static 'default-avatar.jpg' %}" class="rounded-circle" width="30" height="30">
+                            <img src="{% static 'default-avatar.jpg' %}" class="rounded-circle me-2" width="30"
+                                height="30" style="object-fit: cover;">
                             {% endif %}
                             {{ user.username }}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                             <li><a class="dropdown-item" href="{% url 'profile' username=user.username %}">Profile</a>
                             </li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     </li>
                     {% else %}
-                    <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
-                    <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container my-5 text-light">
-        <h2 class="mb-4">📊 All Threads</h2>
 
-        <!-- Search & Filter -->
-        <form method="get" class="filter-form">
-            <input type="text" name="q" class="form-control" placeholder="Search threads..."
-                value="{{ request.GET.q }}">
-            <select name="sort" class="form-select">
-                <option value="">Sort By</option>
-                <option value="latest" {% if request.GET.sort == "latest" %}selected{% endif %}>Latest</option>
-                <option value="views" {% if request.GET.sort == "views" %}selected{% endif %}>Most Viewed</option>
+    <main class="flex-grow-1">
+        <div class="container my-5 text-light">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+                <h2 class="m-0 text-center text-md-start">📊 All Threads</h2>
+                <a href="{% url 'create_thread' %}" class="create-thread-btn"> Create Thread</a>
+            </div>
 
-            </select>
-            <button type="submit" class="btn btn-info">Apply</button>
-        </form>
+            <form method="get" class="filter-form">
+                <input type="text" name="q" class="form-control" placeholder="Search threads..."
+                    value="{{ request.GET.q }}">
+                <select name="sort" class="form-select">
+                    <option value="">Sort By</option>
+                    <option value="latest" {% if request.GET.sort == "latest" %}selected{% endif %}>Latest</option>
+                    <option value="views" {% if request.GET.sort == "views" %}selected{% endif %}>Most Viewed</option>
+                </select>
+                <button type="submit" class="btn btn-info">Apply</button>
+            </form>
 
-        {% if threads %}
-        <div class="row">
-            {% for thread in threads %}
-            <div class="col-md-4 mb-4">
-                <div class="thread-card d-flex">
-                    {% if thread.image %}
-                    <img src="{{ thread.image.url }}" class="thread-image" alt="Thread image">
-                    {% else %}
-                    <img src="{% static 'default-thread.jpg' %}" class="thread-image" alt="Default image">
-                    {% endif %}
-                    <div class="thread-info ms-3">
-                        <a href="{% url 'thread_detail' thread.id %}" class="text-light">{{ thread.title }}</a>
-                        <p class="text-muted">{{ thread.created_at|date:"M d, Y" }} | 💬 {{ thread.comment_count }}
-                            comments</p>
+            {% if threads %}
+            <div class="row">
+                {% for thread in threads %}
+                <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                    <div class="thread-card">
+                        {% if thread.image %}
+                        <img src="{{ thread.image.url }}" class="thread-image" alt="Thread image">
+                        {% else %}
+                        <img src="{% static 'default-thread.jpg' %}" class="thread-image" alt="Default image">
+                        {% endif %}
+                        <div class="thread-info">
+                            <a href="{% url 'thread_detail' thread.id %}" class="text-light">{{ thread.title }}</a>
+                            <p class="text-light small mt-2">
+                                {{ thread.created_at|date:"M d, Y" }} |
+                                👤 {{ thread.user.username }} |
+                                💬 {{ thread.comment_count }} comments
+                            </p>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No threads available. Be the first to create one!</p>
-        {% endif %}
-
-        <!-- Pagination -->
-        <div class="pagination">
-            {% if threads.has_previous %}
-            <a href="?page=1&sort={{ request.GET.sort }}">First</a>
-            <a href="?page={{ threads.previous_page_number }}&sort={{ request.GET.sort }}">Previous</a>
+            {% else %}
+            <p class="text-center">No threads available. Be the first to create one!</p>
             {% endif %}
 
-            <span>Page {{ threads.number }} of {{ threads.paginator.num_pages }}</span>
-
-            {% if threads.has_next %}
-            <a href="?page={{ threads.next_page_number }}&sort={{ request.GET.sort }}">Next</a>
-            <a href="?page={{ threads.paginator.num_pages }}&sort={{ request.GET.sort }}">Last</a>
-            {% endif %}
+            <div class="pagination mt-4">
+                {% if threads.has_previous %}
+                <a href="?page=1&sort={{ request.GET.sort }}">First</a>
+                <a href="?page={{ threads.previous_page_number }}&sort={{ request.GET.sort }}">Previous</a>
+                {% endif %}
+                <span>Page {{ threads.number }} of {{ threads.paginator.num_pages }}</span>
+                {% if threads.has_next %}
+                <a href="?page={{ threads.next_page_number }}&sort={{ request.GET.sort }}">Next</a>
+                <a href="?page={{ threads.paginator.num_pages }}&sort={{ request.GET.sort }}">Last</a>
+                {% endif %}
+            </div>
         </div>
-
-        <div class="mt-4">
-            <a href="{% url 'create_thread' %}" class="btn btn-primary">Create Thread</a>
-        </div>
-    </div>
+    </main>
 
     <footer>
-        <p>Built with ❤️ by Anas Obaid</p>
+        <p
+            style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 600; letter-spacing: 0.8px; color: #ccc; font-size: 16px; text-align: center;">
+            Powered by <span style="color: #f39c12;">passion</span>. Driven by <span
+                style="color: #1abc9c;">community</span>.
+        </p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
